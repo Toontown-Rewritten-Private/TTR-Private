@@ -256,6 +256,7 @@ class DistributedInvasionSuit(DistributedSuitBase, InvasionSuitBase, FSM, DelayD
         self.exploding = True
         loseActor = self.getLoseActor()
         loseActor.reparentTo(render)
+        loseActor.setBlend(frameBlend=config.ConfigVariableBool('want-smooth-animations', False).getValue())
         spinningSound = base.loader.loadSfx('phase_3.5/audio/sfx/Cog_Death.ogg')
         deathSound = base.loader.loadSfx('phase_3.5/audio/sfx/ENC_cogfall_apart.ogg')
         self.stash()
@@ -453,7 +454,7 @@ class DistributedInvasionSuit(DistributedSuitBase, InvasionSuitBase, FSM, DelayD
 
             def __checkNearCloud(task):
                 if Vec3(base.localAvatar.getPos(braincloud)).length() <= 5:
-                    self.applyShakeAttack(base.localAvatar, SafezoneInvasionGlobals.FinaleSuitAttackDamage)
+                    self.applyShakeAttack(base.localAvatar, round(SafezoneInvasionGlobals.FinaleSuitAttackDamage * SafezoneInvasionGlobals.DifficultyMultiplier))
 
             self.finaleBrainstormSequence = Sequence(braincloud.scaleInterval(3, (3.5, 3.5, 2.5)), Parallel(Func(base.playSfx, self.brainstormSfx), Func(braincloud.wrtReparentTo, render), ParticleInterval(brainstorm, braincloud, worldRelative=0, duration=4.3, cleanup=True)), Wait(1), braincloud.scaleInterval(1, (0.0, 0.0, 0.0)))
             taskMgr.doMethodLater(4, __checkNearCloud, 'CheckNearBraincloud')
@@ -469,7 +470,7 @@ class DistributedInvasionSuit(DistributedSuitBase, InvasionSuitBase, FSM, DelayD
 
     def enterFinaleStompAttack(self, offset):
         self.finaleAttackJump = Sequence(ActorInterval(self, 'jump', startFrame=0, endFrame=18), Func(base.playSfx, self.quakeLiftSfx), ActorInterval(self, 'jump', startFrame=18, endFrame=20), ActorInterval(self, 'jump', startFrame=97, endFrame=111), Func(base.playSfx, self.quakeLandSfx), ActorInterval(self, 'jump', startFrame=112, endFrame=138))
-        self.finaleStompSequence = Sequence(Func(self.sayFaceoffTaunt, True, 'ENOUGH!', dialogue=self.speechGruntSfx), Wait(1.25), Func(self.finaleAttackJump.start, offset), Wait(1.5), Func(self.applyShakeAttack, base.localAvatar, SafezoneInvasionGlobals.FinaleSuitAttackDamage))
+        self.finaleStompSequence = Sequence(Func(self.sayFaceoffTaunt, True, 'ENOUGH!', dialogue=self.speechGruntSfx), Wait(1.25), Func(self.finaleAttackJump.start, offset), Wait(1.5), Func(self.applyShakeAttack, base.localAvatar, round(SafezoneInvasionGlobals.FinaleSuitAttackDamage * SafezoneInvasionGlobals.DifficultyMultiplier)))
         self.finaleStompSequence.setT(offset)
         self.finaleStompSequence.start()
 

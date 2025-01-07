@@ -119,7 +119,7 @@ class DistributedInvasionSuitAI(DistributedSuitBaseAI, InvasionSuitBase, FSM):
          'newspaper',
          'pink-slip',
          'power-tie']
-        damage = round(float(self.getActualLevel()) / 2.0)
+        damage = (round(float(self.getActualLevel()) / 2.0) * SafezoneInvasionGlobals.DifficultyMultiplier)
         if damage <= 0:
             damage = 1
         self.sendUpdate('setAttackInfo', [who, choice(attacks), damage])

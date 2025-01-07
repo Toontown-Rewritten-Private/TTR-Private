@@ -7,7 +7,7 @@ FinaleSuitDestinations = [(-96.2, -52.3),
  (7.1, -1.4),
  (27.3, -0.4),
  (36.5, -1.9)]
-FinaleSuitName = 'Director of\nAmbush Marketing\nSupervisor\nLevel 50'
+FinaleSuitName = 'Director of\nAmbush Marketing\nSellbot\nSupervisor'
 FinaleSuitPhrases = ['Apparently our marketing strategies haven\'t exactly appealed to you "Toons".',
  'I suppose you could say that "I\'m the boss."',
  "I'll be needing to speak with your President directly.I'm prepared to close this deal quickly.",
@@ -19,6 +19,7 @@ FinaleSuitPhrases = ['Apparently our marketing strategies haven\'t exactly appea
  "I hope you won't pull out of the deal like your predecessor.",
  "Don't worry, he is in safe keeping now."]
 FinaleSuitAttackDamage = 10
+DifficultyMultiplier = 0.8
 FinaleSuitAttackDelay = 10
 SuitSpawnPoints = [(-59.0, 70.0, 0.0, -149.0),
  (-122.0, -54.0, 0.5, -40.0),
