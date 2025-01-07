@@ -55,8 +55,7 @@ class AvatarChooser(StateData.StateData):
         base.disableMouse()
         self.title.reparentTo(aspect2d)
         self.quitButton.show()
-        #if base.cr.loginInterface.supportsRelogin():
-        #    self.logoutButton.show()
+        self.questionableButton.show()
         self.pickAToonBG.setBin('background', 1)
         self.pickAToonBG.reparentTo(aspect2d)
         base.setBackgroundColor(Vec4(0.145, 0.368, 0.78, 1))
@@ -76,7 +75,7 @@ class AvatarChooser(StateData.StateData):
         self.ignoreAll()
         self.title.reparentTo(hidden)
         self.quitButton.hide()
-        #self.logoutButton.hide()
+        self.questionableButton.hide()
         self.pickAToonBG.reparentTo(hidden)
         base.setBackgroundColor(ToontownGlobals.DefaultBackgroundColor)
         return None
@@ -96,13 +95,11 @@ class AvatarChooser(StateData.StateData):
         self.title = OnscreenText(TTLocalizer.AvatarChooserPickAToon, scale=TTLocalizer.ACtitle, parent=hidden, font=ToontownGlobals.getSignFont(), fg=(1, 0.9, 0.1, 1), pos=(0.0, 0.82))
         quitHover = gui.find('**/QuitBtn_RLVR')
         self.quitButton = DirectButton(image=(quitHover, quitHover, quitHover), parent=base.a2dBottomRight, relief=None, text=TTLocalizer.AvatarChooserQuit, text_font=ToontownGlobals.getSignFont(), text_fg=(0.977, 0.816, 0.133, 1), text_pos=TTLocalizer.ACquitButtonPos, text_scale=TTLocalizer.ACquitButton, image_scale=1, image1_scale=1.05, image2_scale=1.05, scale=1.05, pos=(-0.25, 0, 0.1), command=self.__handleQuit)
-        #self.logoutButton = DirectButton(relief=None, image=(quitHover, quitHover, quitHover), text=TTLocalizer.OptionsPageLogout, text_font=ToontownGlobals.getSignFont(), text_fg=(0.977, 0.816, 0.133, 1), text_scale=TTLocalizer.AClogoutButton, text_pos=(0, -0.035), pos=(-1.17, 0, -0.914), image_scale=1.15, image1_scale=1.15, image2_scale=1.18, scale=0.5, command=self.__handleLogoutWithoutConfirm)
-        if ConfigVariableBool('want-retro-rewritten', False):
-            pass
-        else:
+        self.questionableButton = DirectButton(relief=None, image=(quitHover, quitHover, quitHover), parent=base.a2dBottomLeft, text=TTLocalizer.AvatarChooserQuestionable, text_font=ToontownGlobals.getSignFont(), text_fg=(0.977, 0.816, 0.133, 1), text_scale=TTLocalizer.ACquestionableButton, text_pos=(0, -0.035), image_scale=1, image1_scale=1.05, image2_scale=1.05, scale=1.05, pos=(0.25, 0, 0.1), command=self.__handleTestCutscene)
+        if not ConfigVariableBool('want-retro-rewritten', False):
             self.loading.cleanup()
             self.loading.musicLoadIn()
-        #self.logoutButton.hide()
+        self.questionableButton.hide()
         gui.removeNode()
         gui2.removeNode()
         newGui.removeNode()
@@ -221,8 +218,8 @@ class AvatarChooser(StateData.StateData):
         del self.title
         self.quitButton.destroy()
         del self.quitButton
-        #self.logoutButton.destroy()
-        #del self.logoutButton
+        self.questionableButton.destroy()
+        del self.questionableButton
         self.pickAToonBG.removeNode()
         del self.pickAToonBG
         del self.avatarList
@@ -289,5 +286,8 @@ class AvatarChooser(StateData.StateData):
         else:
             self.fsm.request('Choose')
 
-    def __handleLogoutWithoutConfirm(self):
-        base.cr.loginFSM.request('login')
+    def __handleTestCutscene(self):
+        self.exit()
+        self.unload()
+        from toontown.cutscenes.slappyprologue import Sequence
+        Sequence.Characters()
