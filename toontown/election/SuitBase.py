@@ -55,13 +55,25 @@ class SuitBase:
         return self.level
 
     def setLevel(self, level):
+        attributes = SuitBattleGlobals.SuitAttributes[self.dna.name]
         self.level = level
         nameWLevel = TTLocalizer.SuitBaseNameWithLevel % {'name': self.name,
          'dept': self.getStyleDept(),
          'level': self.getActualLevel()}
         self.setDisplayName(nameWLevel)
-        attributes = SuitBattleGlobals.SuitAttributes[self.dna.name]
         self.maxHP = attributes['hp'][self.level]
+        self.currHP = self.maxHP
+
+    def setBeyondLevel(self, levelOffset):
+        if levelOffset >= len(SuitBattleGlobals.MaximumHitPoints) and levelOffset >= 8:
+            levelOffset -= 8
+        attributes = SuitBattleGlobals.SuitAttributes[self.dna.name]
+        self.level = len(attributes['hp']) + levelOffset
+        nameWLevel = TTLocalizer.SuitBaseNameWithLevel % {'name': self.name,
+         'dept': self.getStyleDept(),
+         'level': self.getActualLevel()}
+        self.setDisplayName(nameWLevel)
+        self.maxHP = SuitBattleGlobals.MaximumHitPoints[levelOffset]
         self.currHP = self.maxHP
 
     def getSkelecog(self):

@@ -22,8 +22,8 @@ class ToontownSettings:
         loadPrcFileData('toonBase Settings Election', 'want-doomsday %s' % electionEvent)
         self.settings.updateSetting('game', 'elections', electionEvent)
 
-        electionDifficulty = self.settings.getInt('game', 'election-difficulty', 0)
-        loadPrcFileData('toonBase Settings Election Difficulty', 'doomsday-level %s' % electionDifficulty)
+        electionDifficulty = self.settings.getInt('game', 'election-difficulty', 1)
+        loadPrcFileData('toonBase Settings Election Difficulty', 'election-difficulty %s' % electionDifficulty)
         self.settings.updateSetting('game', 'election-difficulty', electionDifficulty)
 
         smoothAnimations = self.settings.getBool('game', 'smoothanimations', True)

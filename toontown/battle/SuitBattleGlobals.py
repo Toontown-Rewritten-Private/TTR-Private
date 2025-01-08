@@ -3151,7 +3151,7 @@ WATERCOOLER = list(SuitAttacks.keys()).index('Watercooler')
 WITHDRAWAL = list(SuitAttacks.keys()).index('Withdrawal')
 WRITE_OFF = list(SuitAttacks.keys()).index('WriteOff')
 
-MaxmimumHitPoints = [
+MaximumHitPoints = [
     320, # lvl 16
     356, # lvl 17
     394, # lvl 18

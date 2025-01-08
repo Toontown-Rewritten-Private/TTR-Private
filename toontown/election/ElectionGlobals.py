@@ -313,7 +313,6 @@ SlappySpeechChoices = [SlappySpeech1,
  SlappySpeech5]
 SlappySpeeches = choice(SlappySpeechChoices)
 NumBalloonPaths = 1
-MaxDifficulty = 4
 
 def generateFlightPaths(balloon):
     flightPaths = []

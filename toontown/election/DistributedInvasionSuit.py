@@ -388,7 +388,7 @@ class DistributedInvasionSuit(DistributedSuitBase, InvasionSuitBase, FSM, DelayD
     def __stomp(self):
         if self.exploding:
             return
-        ta = ThumpAttack(lambda : self.applyShakeAttack(base.localAvatar, SafezoneInvasionGlobals.MoveShakerDamageRadius))
+        ta = ThumpAttack(lambda : self.applyShakeAttack(base.localAvatar, (SafezoneInvasionGlobals.MoveShakerDamageRadius * SafezoneInvasionGlobals.DifficultyLevel)))
         ta.reparentTo(self.getParent())
         ta.setPos(self, 0, 0, 0)
         ta.start()

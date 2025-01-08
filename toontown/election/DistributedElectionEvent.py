@@ -13,6 +13,7 @@ from toontown.toonbase import ToontownGlobals
 from toontown.battle import BattleProps
 from otp.margins.WhisperPopup import *
 from . import ElectionGlobals
+from . import SafezoneInvasionGlobals
 from direct.directnotify import DirectNotifyGlobal
 from random import choice
 from otp.speedchat import SpeedChatGlobals
@@ -185,7 +186,7 @@ class DistributedElectionEvent(DistributedObject, FSM):
         suitDNA = SuitDNA.SuitDNA()
         suitDNA.newSuit('ym')
         self.suit.setDNA(suitDNA)
-        self.suit.setDisplayName('Yesman\nBossbot\nLevel 3')
+        self.suit.setDisplayName(f'Yesman\nBossbot\nLevel {3 + SafezoneInvasionGlobals.DifficultyLevel - 1}')
         self.suit.setPickable(0)
         phasePath = 'phase_3.5/audio/dial/'
         self.speechMurmurSfx = loader.loadSfx(phasePath + 'COG_VO_murmur.ogg')

@@ -52,12 +52,10 @@ class DistributedToonfestCogAI(DistributedObjectAI, FSM):
     def enterDown(self):
         self.cogDown = True
         self.sendUpdate('toggleCog', ['Down'])
-        print('Cog has gone down.')
 
     def enterUp(self):
         self.cogUp = True
         self.sendUpdate('toggleCog', ['Up'])
-        print('Cog has come up.')
 
     def updateTower(self, avName):
         base = random.randrange(0, 3)

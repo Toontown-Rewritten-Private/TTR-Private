@@ -1,5 +1,7 @@
 # Embedded file name: toontown.election.SafezoneInvasionGlobals
 import random
+from toontown.battle import SuitBattleGlobals
+
 FirstSuitSpawnPoint = (65.0, -5.0, 4.0, 180.0)
 FinaleSuitSpawnPoint = (-138.0, 4.0, 0.5, -90.0)
 FinaleSuitDestinations = [(-96.2, -52.3),
@@ -19,7 +21,11 @@ FinaleSuitPhrases = ['Apparently our marketing strategies haven\'t exactly appea
  "I hope you won't pull out of the deal like your predecessor.",
  "Don't worry, he is in safe keeping now."]
 FinaleSuitAttackDamage = 10
-DifficultyMultiplier = 0.8
+MaxDifficulty = 4
+DifficultyLevel = min(config.ConfigVariableInt('election-difficulty', 1).getValue(), MaxDifficulty)
+DifficultyMultiplier = 1 if DifficultyLevel <= 1 else 0.8 * DifficultyLevel
+PieType = min(3 + DifficultyLevel, 6)
+PieAmount = round(25 * DifficultyMultiplier)
 FinaleSuitAttackDelay = 10
 SuitSpawnPoints = [(-59.0, 70.0, 0.0, -149.0),
  (-122.0, -54.0, 0.5, -40.0),
@@ -61,7 +67,7 @@ cashbotSuits = ['sc',
  'mb',
  'ls',
  'rb']
-lawbotSuitTypes = ['bf',
+lawbotSuits = ['bf',
  'b',
  'dt',
  'ac',
@@ -78,22 +84,31 @@ bossbotSuits = ['f',
  'cr',
  'tbc']
 
-def generateSuits(numberOfSuits, suitLevelRange = [0, 0], suitRange = [0, 0], wantExtraShakers = False):
-    suits = [sellbotSuits,
-     cashbotSuits,
-     lawbotSuitTypes,
-     bossbotSuits]
+def generateSuits(numberOfSuits, suitLevelRange = [0, 0], suitRange = [0, 0], wantExtraShakers = False, wantBeyondLevels = False):
+    suits = [sellbotSuits, cashbotSuits, lawbotSuits, bossbotSuits]
     wave = []
+
+    suitLevelMin = suitLevelRange[0]
+    suitLevelMax = suitLevelRange[1]
+
+    if not wantBeyondLevels:
+        suitLevelMin += (DifficultyLevel - 1)
+        suitLevelMax += (DifficultyLevel - 1)
+
+    for x in range(numberOfSuits):
+        randomSuit = random.choice(suits)[random.randint(suitRange[0], suitRange[1])]
+        randomLevel = random.randint(suitLevelMin, suitLevelMax)
+        wave.append((randomSuit, randomLevel))
+
     if wantExtraShakers:
-        wave = [ (random.choice(suits)[random.randint(suitRange[0], suitRange[1])], random.randint(suitLevelRange[0], suitLevelRange[1])) for k in range(numberOfSuits) ]
-        wave.append(('ms', 4))
-        wave.append(('ms', 4))
-    else:
-        wave = [ (random.choice(suits)[random.randint(suitRange[0], suitRange[1])], random.randint(suitLevelRange[0], suitLevelRange[1])) for k in range(numberOfSuits) ]
+        suitType = 'ms'
+        suitLevel = random.randint(suitLevelMin, suitLevelMax)
+        wave.append((suitType, suitLevel))
+        wave.append((suitType, suitLevel))
     return wave
 
-
-SuitWaves = [generateSuits(5, [0, 4], [0, 0]),
+SuitWaves = [
+ generateSuits(5, [0, 4], [0, 0]),
  generateSuits(7, [2, 3], [0, 0]),
  generateSuits(9, [2, 4], [0, 0]),
  generateSuits(6, [2, 3], [0, 1]),
@@ -116,10 +131,17 @@ SuitWaves = [generateSuits(5, [0, 4], [0, 0]),
  generateSuits(8, [2, 3], [6, 6], True),
  generateSuits(8, [1, 3], [6, 7], True),
  generateSuits(8, [1, 4], [7, 7], True),
- generateSuits(8, [2, 4], [7, 7], True),
  generateSuits(8, [1, 3], [6, 7], True),
- generateSuits(10, [1, 4], [7, 7], True),
- generateSuits(10, [2, 4], [7, 7], True)]
+]
+if DifficultyLevel >= 4:
+ SuitWaves.append(generateSuits(8, [0, 2], [7, 7], False, True))  # 16 - 18
+ SuitWaves.append(generateSuits(10, [1, 3], [7, 7], False, True)) # 17 - 19
+ SuitWaves.append(generateSuits(10, [2, 4], [7, 7], False, True)) # 18 - 20
+else:
+ SuitWaves.append(generateSuits(8, [2, 4], [7, 7], True))
+ SuitWaves.append(generateSuits(10, [1, 4], [7, 7], True))
+ SuitWaves.append(generateSuits(10, [2, 4], [7, 7], True))
+
 SuitWaitWaves = [1,
  4,
  7,

@@ -25,7 +25,7 @@ class DistributedElectionEventAI(DistributedObjectAI, FSM):
         FSM.__init__(self, 'ElectionFSM')
         self.air = air
         self.stateTime = globalClockDelta.getRealNetworkTime()
-        self.pieTypeAmount = [4, 20, 1]
+        self.pieTypeAmount = [SafezoneInvasionGlobals.PieType, SafezoneInvasionGlobals.PieAmount, 1]
         self.balloon = None
         self.cogDead = False
         self.master = InvasionMasterAI(self)

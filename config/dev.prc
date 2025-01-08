@@ -93,4 +93,4 @@ mega-invasion-cog-type tm
 # Working (Custom) Addons!
 want-toonfest #t
 want-doomsday #f
-doomsday-level 0
+election-difficulty 1

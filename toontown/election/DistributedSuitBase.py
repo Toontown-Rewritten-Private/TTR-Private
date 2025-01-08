@@ -150,7 +150,10 @@ class DistributedSuitBase(DistributedAvatar.DistributedAvatar, Suit.Suit, SuitBa
     def setLevelDist(self, level):
         if self.notify.getDebug():
             self.notify.debug('Got level %d from server for suit %d' % (level, self.getDoId()))
-        self.setLevel(level)
+        if level <= 7:
+            self.setLevel(level)
+        else:
+            self.setBeyondLevel(level - 8)
 
     def attachPropeller(self):
         if self.prop == None:

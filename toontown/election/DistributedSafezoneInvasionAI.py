@@ -60,18 +60,23 @@ class DistributedSafezoneInvasionAI(DistributedObjectAI, FSM):
         self.ignoreAll()
 
     def enterBeginWave(self, waveNumber):
+        self._waveBeginTasks = []
+        self.spawnPoints = list(range(len(SafezoneInvasionGlobals.SuitSpawnPoints)))
+        delay = max(SafezoneInvasionGlobals.WaveBeginningTime, SuitTimings.fromSky)
+        spread = delay - SuitTimings.fromSky
         self.waveNumber = waveNumber
+
+        suitsToCall = SafezoneInvasionGlobals.SuitWaves[self.waveNumber]
+        spreadPerSuit = spread / len(suitsToCall)
+        self.numberOfSuits = len(suitsToCall)
+
         if self.waveNumber == 12:
             self.election.saySurleePhrase("Brace yourselves for impact. They're sending in the Movers and Shakers!", 1, True)
         elif self.waveNumber == 24:
             self.election.saySurleePhrase("Oh no. Nonono. We're destroying the Cogs faster than they can be built. Skelecogs inbound!", 1, True)
-        self.spawnPoints = list(range(len(SafezoneInvasionGlobals.SuitSpawnPoints)))
-        suitsToCall = SafezoneInvasionGlobals.SuitWaves[self.waveNumber]
-        self.numberOfSuits = len(suitsToCall)
-        delay = max(SafezoneInvasionGlobals.WaveBeginningTime, SuitTimings.fromSky)
-        spread = delay - SuitTimings.fromSky
-        spreadPerSuit = spread / len(suitsToCall)
-        self._waveBeginTasks = []
+
+        print(f'Wave number: {self.waveNumber}')
+
         for i, (suit, level) in enumerate(suitsToCall):
             self._waveBeginTasks.append(taskMgr.doMethodLater(i * spreadPerSuit, self.spawnOne, self.uniqueName('summon-suit-%s' % i), extraArgs=[suit, level]))
 
@@ -237,7 +242,7 @@ class DistributedSafezoneInvasionAI(DistributedObjectAI, FSM):
             return
         if toon.getHp() == -1:
             toon.setHp(0)
-        toon.toonUp(SafezoneInvasionGlobals.ToonHealAmount)
+        toon.toonUp(round(SafezoneInvasionGlobals.ToonHealAmount * SafezoneInvasionGlobals.DifficultyMultiplier))
         self.checkToonHp()
 
     def checkToonHp(self):
@@ -262,7 +267,11 @@ class DistributedSafezoneInvasionAI(DistributedObjectAI, FSM):
         suit = DistributedInvasionSuitAI(self.air, self)
         suit.dna.newSuit(suitType)
         suit.setSpawnPoint(pointId)
-        suit.setLevel(levelOffset)
+        print(levelOffset)
+        if self.waveNumber in [0, 1, 2] or self.waveNumber in SafezoneInvasionGlobals.SuitSkelecogWaves:
+            suit.setBeyondLevel(levelOffset)
+        else:
+            suit.setLevel(levelOffset)
         suit.generateWithRequired(self.zoneId)
         if self.waveNumber in SafezoneInvasionGlobals.SuitSkelecogWaves:
             suit.d_makeSkelecog()
