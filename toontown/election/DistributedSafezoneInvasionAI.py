@@ -268,7 +268,7 @@ class DistributedSafezoneInvasionAI(DistributedObjectAI, FSM):
         suit.dna.newSuit(suitType)
         suit.setSpawnPoint(pointId)
         print(levelOffset)
-        if self.waveNumber in [0, 1, 2] or self.waveNumber in SafezoneInvasionGlobals.SuitSkelecogWaves:
+        if self.waveNumber in SafezoneInvasionGlobals.SuitSkelecogWaves:
             suit.setBeyondLevel(levelOffset)
         else:
             suit.setLevel(levelOffset)
